@@ -365,42 +365,6 @@ for (episode in table11[3:12]) {
   season11 <- rbind(season11, ep)
 }
 
-#___________________________________season 12__________________________________________
-
-# get season 12 tables from wikipedia
-url <- "https://en.wikipedia.org/wiki/The_Great_British_Bake_Off_(series_11)"
-webpage <- read_html(url)
-table12nodes <- html_nodes(webpage,'table.wikitable')
-table12 <- html_table(table12nodes, header = TRUE)
-
-#construct a for loop to build season 2 comprehensive data frame
-count <- 0
-season12 <- data.frame(matrix(ncol = 9, nrow = 0))
-x <- c('baker','signature','technical.rank','showstopper','episode', 'signatuare.name','technical.name','showstopper.name','season')
-colnames(season12) <- x
-
-for (episode in table12[3:12]) {
-  ep <- data.frame(episode)
-  count = count +1
-  ep['episode'] = count
-  
-  library(stringr)
-  signature_name <- str_replace_all(colnames(ep[2]), "[[:punct:]]", " ")
-  ep['signature.challenge'] = str_remove(signature_name, 'Signature.')
-  
-  technical_name <- str_replace_all(colnames(ep[3]), "[[:punct:]]", " ")
-  ep['technical.challenge'] = str_remove(technical_name, 'Technical.')
-  
-  showstopper_name <- str_replace_all(colnames(ep[4]), "[[:punct:]]", " ")
-  ep['showstopper.challenge'] = str_remove(showstopper_name, 'Showstopper.')
-  
-  ep['season'] = '12'
-  
-  colnames(ep) <- x
-  
-  season12 <- rbind(season12, ep)
-}
-
 #___________________________________combine all seasons__________________________________________
 
 episodes.data <- rbind(season2, season3, season4, season5, season6, season7, season8, season9, season10, season11, season12)
