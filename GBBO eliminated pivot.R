@@ -59,8 +59,8 @@ for (x in 3:11) {
   
   #make new column with relevant background color meanings
   colorsduped <- colorsduped %>% mutate(status =
-                                          case_when(style %like% "Cornflower" ~ "Favorite", 
-                                                    style %like% "Plum" ~ "Least Favorite",
+                                          case_when(tolower(style) %like% "cornflower" ~ "Favorite", 
+                                                    tolower(style) %like% "plum" ~ "Least Favorite",
                                                     TRUE ~ "")
   )
   
