@@ -41,6 +41,8 @@ for (x in 3:11) {
                                          values_to = "result", 
                                          names_prefix = "Elimination.chart.")
 
+  result.pivot <- result.pivot %>% filter(result.pivot$episode %in% c(1,2,3,4,5,6,7,8,9,10))
+  
   #create column for season
   result.pivot['season'] = x
   
@@ -55,8 +57,8 @@ for (x in 3:11) {
   colors$colspan <- replace(colors$colspan, is.na(colors$colspan), 1)
   dups <- colors %>% transform(colspan = as.numeric(colspan)) 
   colorsduped <- dups[rep(seq_len(nrow(dups)), as.numeric(unlist(c(dups$colspan)))), ]
-  colorsduped <- colorsduped %>% filter(colorsduped$style != "left")
-  
+  colorsduped <- colorsduped %>% filter(tolower(colorsduped$style) %like% "background")
+
   #make new column with relevant background color meanings
   colorsduped <- colorsduped %>% mutate(status =
                                           case_when(tolower(style) %like% "cornflower" ~ "Favorite", 
@@ -98,12 +100,14 @@ result.pivot['season'] = 2
 names(result.pivot)[1] <- "baker"
 result.pivot["baker.season.episode"] = str_c(result.pivot$baker,result.pivot$season,result.pivot$episode,sep = '_')
 
+
+
 colors <- webpage %>% html_nodes(xpath='//*[@id="mw-content-text"]/div/table[3]') %>% html_nodes('td')
 colors <- bind_rows(lapply(xml_attrs(colors), function(x) data.frame(as.list(x), stringsAsFactors=FALSE)))
 colors$colspan <- replace(colors$colspan, is.na(colors$colspan), 1)
 dups <- colors %>% transform(colspan = as.numeric(colspan)) 
 colorsduped <- dups[rep(seq_len(nrow(dups)), as.numeric(unlist(c(dups$colspan)))), ]
-colorsduped <- colorsduped %>% filter(colorsduped$style != "left")
+colorsduped <- colorsduped %>% filter(tolower(colorsduped$style) %like% "background")
 
 colorsduped <- colorsduped %>% mutate(status =
                                         case_when(tolower(style) %like% "cornflower" ~ "Favorite", 
@@ -119,6 +123,3 @@ results["baker.season.episode"] = str_c(results$baker,results$season,results$epi
 
 #left join results to episodes.data using id variable
 joined <- merge(x=episodes.data,y=results[ , c("baker.season.episode","result","status")],by="baker.season.episode",all.x=TRUE)
-
-
-
