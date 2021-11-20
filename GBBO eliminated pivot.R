@@ -40,8 +40,6 @@ for (x in 3:11) {
                                          names_to = "episode", 
                                          values_to = "result", 
                                          names_prefix = "Elimination.chart.")
-
-  result.pivot <- result.pivot %>% filter(result.pivot$episode %in% c(1,2,3,4,5,6,7,8,9,10))
   
   #create column for season
   result.pivot['season'] = x
@@ -90,6 +88,8 @@ tables <- html_table(tables, header = TRUE)
 
 result <- data.frame(tables[2])
 
+result <- subset(result, select = c("Elimination.chart","Elimination.chart.1","Elimination.chart.2","Elimination.chart.3","Elimination.chart.4","Elimination.chart.5","Elimination.chart.6","Elimination.chart.7","Elimination.chart.8","Elimination.chart.9","Elimination.chart.10"))
+                             
 result.pivot <- tidyr::pivot_longer(subset(result, Elimination.chart != 'Baker'),
                                     cols = starts_with("Elimination.chart."), 
                                     names_to = "episode", 
@@ -98,10 +98,7 @@ result.pivot <- tidyr::pivot_longer(subset(result, Elimination.chart != 'Baker')
 
 result.pivot['season'] = 2
 names(result.pivot)[1] <- "baker"
-result.pivot["baker.season.episode"] = str_c(result.pivot$baker,result.pivot$season,result.pivot$episode,sep = '_')
-
-
-
+                             
 colors <- webpage %>% html_nodes(xpath='//*[@id="mw-content-text"]/div/table[3]') %>% html_nodes('td')
 colors <- bind_rows(lapply(xml_attrs(colors), function(x) data.frame(as.list(x), stringsAsFactors=FALSE)))
 colors$colspan <- replace(colors$colspan, is.na(colors$colspan), 1)
