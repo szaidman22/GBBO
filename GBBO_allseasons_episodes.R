@@ -367,7 +367,7 @@ for (episode in table11[3:12]) {
 
 #___________________________________season 12__________________________________________
 
-# get season 11 tables from wikipedia
+# get season 12 tables from wikipedia
 url <- "https://en.wikipedia.org/wiki/The_Great_British_Bake_Off_(series_12)"
 webpage <- read_html(url)
 table12nodes <- html_nodes(webpage,'table.wikitable')
