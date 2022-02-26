@@ -15,7 +15,6 @@ library("xml2")
 
 
 #get episodes data to be joined with status data later
-setwd("/Users/starshine1000/Desktop/") #whichever
 episodes.data <- read.csv("GBBO_allseasons_episodes_022422.csv")
 
 #make id variable for episodes.data
@@ -52,7 +51,7 @@ for (x in 3:11) {
   
   #remove episodes after elimination
   result.pivot <- result.pivot %>% group_by(baker) %>%
-    mutate(out = min(which(result == 'OUT' | row_number() == n()))) %>%
+    mutate(out = min(which(result %in% c('OUT','WD') | row_number() == n()))) %>%
     filter(row_number() <= out) %>%
     select(-out)
   
@@ -65,7 +64,7 @@ for (x in 3:11) {
   dups <- colors %>% transform(colspan = as.numeric(colspan)) 
   colorsduped <- dups[rep(seq_len(nrow(dups)), as.numeric(unlist(c(dups$colspan)))), ]
   colorsduped <- colorsduped %>% filter(tolower(colorsduped$style) %like% "background") 
-  colorsduped <- colorsduped %>% filter(tolower(colorsduped$style) %like% "background") %>% filter (!style %like% "darkgrey")
+  colorsduped <- colorsduped %>% filter(tolower(colorsduped$style) %like% "background") %>% filter (!style %like% "darkgrey") %>% filter (!style %like% "Silver" )
   
   #make new column with relevant background color meanings
   colorsduped <- colorsduped %>% mutate(status =
@@ -127,7 +126,9 @@ final2 <- merge(result.pivot, colorsduped[,c("style","status")], by = 0)
 
 final2["baker.season.episode"] = str_c(final2$baker,final2$season,final2$episode,sep = '_')
 
-#--------------season 12---------------
+
+#---------------season 12---------------
+
 
 url <- ("https://en.wikipedia.org/wiki/The_Great_British_Bake_Off_(series_12)")
 webpage <- read_html(url)
@@ -153,8 +154,9 @@ result.pivot['season'] = 12
 #label first column of pivoted table baker
 names(result.pivot)[1] <- "baker"
 
+#remove episodes after elimination
 result.pivot <- result.pivot %>% group_by(baker) %>%
-  mutate(out = min(which(result == 'OUT' | row_number() == n()))) %>%
+  mutate(out = min(which(result %in% c('OUT','WD') | row_number() == n()))) %>%
   filter(row_number() <= out) %>%
   select(-out)
 
@@ -166,7 +168,8 @@ colors <- bind_rows(lapply(xml_attrs(colors), function(x) data.frame(as.list(x),
 colors$colspan <- replace(colors$colspan, is.na(colors$colspan), 1)
 dups <- colors %>% transform(colspan = as.numeric(colspan)) 
 colorsduped <- dups[rep(seq_len(nrow(dups)), as.numeric(unlist(c(dups$colspan)))), ]
-colorsduped <- colorsduped %>% filter(tolower(colorsduped$style) %like% "background") %>% filter (!style %like% "darkgrey")
+colorsduped <- colorsduped %>% filter(tolower(colorsduped$style) %like% "background") 
+colorsduped <- colorsduped %>% filter(tolower(colorsduped$style) %like% "background") %>% filter (!style %like% "darkgrey") %>% filter (!style %like% "Silver" )
 
 #make new column with relevant background color meanings
 colorsduped <- colorsduped %>% mutate(status =
@@ -181,9 +184,9 @@ rownames(colorsduped) <- 1:nrow(colorsduped)
 #merge result.pivot and colorsduped to get all information in one place
 final12 <- merge(result.pivot, colorsduped[,c("style","status")], by = 0)
 
+final12 <- merge(result.pivot, colorsduped[,c("style","status")], by = 0)
+
 final12["baker.season.episode"] = str_c(final12$baker,final12$season,final12$episode,sep = '_')
-
-
 
 
 results <- rbind(results, final2, final12)

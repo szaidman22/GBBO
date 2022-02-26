@@ -371,7 +371,7 @@ for (episode in table11[3:12]) {
 url <- "https://en.wikipedia.org/wiki/The_Great_British_Bake_Off_(series_12)"
 webpage <- read_html(url)
 table12nodes <- html_nodes(webpage,'table.wikitable')
-table12 <- html_table(table11nodes, header = TRUE)
+table12 <- html_table(table12nodes, header = TRUE)
 
 #construct a for loop to build season 2 comprehensive data frame
 count <- 0
