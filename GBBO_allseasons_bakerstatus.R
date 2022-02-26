@@ -50,6 +50,12 @@ for (x in 3:11) {
   #label first column of pivoted table baker
   names(result.pivot)[1] <- "baker"
   
+  #remove episodes after elimination
+  result.pivot <- result.pivot %>% group_by(baker) %>%
+    mutate(out = min(which(result == 'OUT' | row_number() == n()))) %>%
+    filter(row_number() <= out) %>%
+    select(-out)
+  
   #extract background color information using xml method found online
   colors <- webpage %>% html_nodes(xpath='//*[@id="mw-content-text"]/div/table[3]') %>% html_nodes('td')
   colors <- bind_rows(lapply(xml_attrs(colors), function(x) data.frame(as.list(x), stringsAsFactors=FALSE)))
@@ -59,7 +65,7 @@ for (x in 3:11) {
   dups <- colors %>% transform(colspan = as.numeric(colspan)) 
   colorsduped <- dups[rep(seq_len(nrow(dups)), as.numeric(unlist(c(dups$colspan)))), ]
   colorsduped <- colorsduped %>% filter(tolower(colorsduped$style) %like% "background") 
-  colorsduped <- colorsduped %>% filter(tolower(colorsduped$style) %like% "background")
+  colorsduped <- colorsduped %>% filter(tolower(colorsduped$style) %like% "background") %>% filter (!style %like% "darkgrey")
   
   #make new column with relevant background color meanings
   colorsduped <- colorsduped %>% mutate(status =
