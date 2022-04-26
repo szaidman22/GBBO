@@ -14,10 +14,10 @@ url <- "https://en.wikipedia.org/wiki/The_Great_British_Bake_Off_(series_2)"
 webpage <- read_html(url)
 table2 <- html_nodes(webpage,'table.wikitable')
 table2 <- html_table(table2, header = TRUE)
-colnames(season2) <- x
+
 season2 <- data.frame(table2[1])
 season2['season'] = '2'
-
+colnames(season2) <- x
 
 #___________________________________season 3__________________________________________
 
@@ -109,7 +109,7 @@ webpage <- read_html(url)
 table8nodes <- html_nodes(webpage,'table.wikitable')
 table8 <- html_table(table8nodes, header = TRUE)
 
-season8 <- data.frame(table4[1])
+season8 <- data.frame(table8[1])
 season8['season'] = '8'
 
 season8 <- season8 %>%
@@ -186,6 +186,5 @@ colnames(season12) <- x
 
 contestants <- rbind(season2, season3, season4, season5, season6, season7, season8, season9, season10, season11, season12)
 
-write.csv(contestants,"/Users/starshine1000/Desktop/GBBO_contestants_022422.csv")
-
+write.csv(contestants,"/Users/starshine1000/Desktop/GBBO_contestants_042622.csv")
 
