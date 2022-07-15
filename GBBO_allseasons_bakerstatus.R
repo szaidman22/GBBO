@@ -195,5 +195,5 @@ results <- rbind(results, final2, final12)
 #left join results to episodes.data using id variable
 joined <- merge(x=episodes.data,y=results[ , c("baker.season.episode","result","status")],by="baker.season.episode",all.x=TRUE)
 
-write.csv(joined,"/Users/starshine1000/Desktop/GBBO_allseasons_episodes_and_status_022422.csv")
+write.csv(joined,"GBBO_allseasons_episodes_and_status_022422.csv")
 
