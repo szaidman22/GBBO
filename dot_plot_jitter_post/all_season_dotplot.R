@@ -6,7 +6,7 @@ gbbo_all <- read.csv("GBBO_allseasons_episodes_and_status_022422.csv")
 
 ### Data frame for all seasons dotplot 
 
-jitter =  gbbo_all %>%
+dotplot =  gbbo_all %>%
   mutate(outcome = case_when(result == '' ~ status, is.na(result) == FALSE ~ result)) %>%
   mutate(points = case_when(outcome == 'Least Favorite' ~ -1, 
                             outcome == 'Favorite' ~ 1,
@@ -35,7 +35,7 @@ jitter =  gbbo_all %>%
 
 #DOTPLOT
 
-ggplot(jitter, aes(x=as.factor(season), y=endsum), group = baker) + 
+ggplot(dotplot, aes(x=as.factor(season), y=endsum), group = baker) + 
   geom_dotplot(binaxis='y', stackdir='center',
                aes(fill = winflag)
                ,dotsize = .5
